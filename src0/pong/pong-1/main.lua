@@ -47,6 +47,7 @@ function love.load()
     -- initialize our virtual resolution, which will be rendered within our
     -- actual window no matter its dimensions; replaces our love.window.setMode call
     -- from the last example
+    -- Give the effect of a lower resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         resizable = false,
@@ -72,6 +73,7 @@ end
 ]]
 function love.draw()
     -- begin rendering at virtual resolution
+    -- anything in between is rendered at this virtual resolution 
     push:apply('start')
 
     -- condensed onto one line from last example
