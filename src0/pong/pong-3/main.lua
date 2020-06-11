@@ -46,6 +46,7 @@ function love.load()
     smallFont = love.graphics.newFont('font.ttf', 8)
 
     -- larger font for drawing the score on the screen
+    -- must separate fonts with their size as they are immutable
     scoreFont = love.graphics.newFont('font.ttf', 32)
 
     -- set LÖVE2D's active font to the smallFont obect
@@ -114,7 +115,7 @@ function love.draw()
 
     -- clear the screen with a specific color; in this case, a color similar
     -- to some versions of the original Pong
-    love.graphics.clear(40, 45, 52, 255)
+    love.graphics.clear(40/255, 45/255, 52/255, 1)
 
     -- draw welcome text toward the top of the screen
     love.graphics.setFont(smallFont)
