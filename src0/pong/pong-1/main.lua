@@ -25,6 +25,8 @@
 -- a more retro aesthetic
 --
 -- https://github.com/Ulydev/push
+
+--Use to create a virtual window
 push = require 'push'
 
 WINDOW_WIDTH = 1280
@@ -39,6 +41,7 @@ VIRTUAL_HEIGHT = 243
 function love.load()
     -- use nearest-neighbor filtering on upscaling and downscaling to prevent blurring of text 
     -- and graphics; try removing this function to see the difference!
+    -- gives a pixelated aesthetic
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
     -- initialize our virtual resolution, which will be rendered within our
@@ -73,6 +76,7 @@ function love.draw()
 
     -- condensed onto one line from last example
     -- note we are now using virtual width and height now for text placement
+    -- love.graphics.setNewFont(24)
     love.graphics.printf('Hello Pong!', 0, VIRTUAL_HEIGHT / 2 - 6, VIRTUAL_WIDTH, 'center')
 
     -- end rendering at virtual resolution
