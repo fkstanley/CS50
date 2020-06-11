@@ -111,8 +111,8 @@ function love.update(dt)
         -- detect ball collision with paddles, reversing dx if true and
         -- slightly increasing it, then altering the dy based on the position of collision
         if ball:collides(player1) then
-            ball.dx = -ball.dx * 1.03
-            ball.x = player1.x + 5
+            ball.dx = -ball.dx * 1.03       -- reverse velocity and speed up
+            ball.x = player1.x + 5          -- makes sure the ball is no longer colliding 
 
             -- keep velocity going in the same direction, but randomize it
             if ball.dy < 0 then
