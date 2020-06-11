@@ -245,7 +245,7 @@ function love.update(dt)
     -- Tracks whether the ball is above or below the paddle and 
     -- moves accordingly
 
-    if (player2.y + player2.height) < ball.y then 
+    if (player2.y + (player2.height / 2)) < ball.y then 
         player2.dy = PADDLE_SPEED * 1.5
     elseif player2.y > ball.y then
         player2.dy = -PADDLE_SPEED * 1.5
