@@ -73,6 +73,8 @@ function love.load()
     scoreFont = love.graphics.newFont('font.ttf', 32)
     love.graphics.setFont(smallFont)
 
+    -- this is just a table, 'score' is a key with corresponding value
+    -- all static due to small file size
     -- set up our sound effects; later, we can just index this table and
     -- call each entry's `play` method
     sounds = {
@@ -80,6 +82,8 @@ function love.load()
         ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
         ['wall_hit'] = love.audio.newSource('sounds/wall_hit.wav', 'static')
     }
+
+    -- can access with sounds.'paddle_hit' or sounds['paddle_hit']
 
     -- initialize window with virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
