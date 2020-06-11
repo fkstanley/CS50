@@ -68,6 +68,7 @@ function love.load()
     ballY = VIRTUAL_HEIGHT / 2 - 2
 
     -- math.random returns a random value between the left and right number
+    -- essentially an if/else statement
     ballDX = math.random(2) == 1 and 100 or -100
     ballDY = math.random(-50, 50)
 
