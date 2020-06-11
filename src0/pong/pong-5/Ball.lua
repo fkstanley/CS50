@@ -15,6 +15,7 @@
 Ball = Class{}
 
 function Ball:init(x, y, width, height)
+    -- self is analagous to this
     self.x = x
     self.y = y
     self.width = width
