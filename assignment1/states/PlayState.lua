@@ -43,7 +43,7 @@ function PlayState:update(dt)
         self.lastY = y
 
         -- randomly generate the gap height between the pipes per pair
-        local gapHeight = math.random(90, 100)
+        local gapHeight = math.random(80, 100)
 
         -- add a new pipe pair at the end of the screen at our new Y
         table.insert(self.pipePairs, PipePair(y, gapHeight))
