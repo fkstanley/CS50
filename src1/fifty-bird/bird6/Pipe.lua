@@ -28,6 +28,7 @@ function Pipe:init(orientation, y)
     self.width = PIPE_IMAGE:getWidth()
     self.height = PIPE_HEIGHT
 
+    -- Orientation allows us to know if it is a top or bottom pipe
     self.orientation = orientation
 end
 
@@ -37,6 +38,8 @@ end
 
 function Pipe:render()
     love.graphics.draw(PIPE_IMAGE, self.x, 
-        (self.orientation == 'top' and self.y + PIPE_HEIGHT or self.y), 
-        0, 1, self.orientation == 'top' and -1 or 1)
+        (self.orientation == 'top' and self.y + PIPE_HEIGHT or self.y), -- shift if it is a top pipe
+        0, -- rotation
+        1, -- X scale
+        self.orientation == 'top' and -1 or 1) -- Y scale, mirror if it is a top pip
 end

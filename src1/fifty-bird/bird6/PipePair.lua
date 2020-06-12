@@ -27,6 +27,8 @@ function PipePair:init(y)
     }
 
     -- whether this pipe pair is ready to be removed from the scene
+    -- don't delete when iterating over a table! 
+    -- causes buggy behaviour
     self.remove = false
 end
 
@@ -43,6 +45,7 @@ function PipePair:update(dt)
 end
 
 function PipePair:render()
+    -- Just refer to Pipe class
     for k, pipe in pairs(self.pipes) do
         pipe:render()
     end
