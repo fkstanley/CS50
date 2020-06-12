@@ -31,7 +31,7 @@ end
     global pipe width and height values.
 ]]
 function Bird:collides(pipe)
-    -- the 2's are left and top offsets
+    -- the 2's are left and top offsets, a little less than half of the bird
     -- the 4's are right and bottom offsets
     -- both offsets are used to shrink the bounding box to give the player
     -- a little bit of leeway with the collision

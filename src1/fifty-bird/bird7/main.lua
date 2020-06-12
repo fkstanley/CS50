@@ -71,6 +71,7 @@ local spawnTimer = 0
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
 -- scrolling variable to pause the game when we collide with a pipe
+-- pauses the game
 local scrolling = true
 
 function love.load()
@@ -117,6 +118,7 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
+    -- if scrolling then update
     if scrolling then
         -- scroll background by preset speed * dt, looping back to 0 after the looping point
         backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) 
@@ -144,7 +146,7 @@ function love.update(dt)
         -- update the bird for input and gravity
         bird:update(dt)
 
-        -- for every pipe pair in the scene...
+        -- for every pipe pair in the scene, update, check for collision and remove
         for k, pair in pairs(pipePairs) do
             pair:update(dt)
 
