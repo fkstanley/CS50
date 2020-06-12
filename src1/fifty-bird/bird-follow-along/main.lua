@@ -3,6 +3,7 @@ push = require 'push'
 Class = require 'class'
 
 require 'Bird'
+require 'Pipe'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -37,6 +38,8 @@ function love.load()
 
     -- Set the title for the game
     love.window.setTitle('Fifty Bird')
+
+    math.randomseed(os.time())
 
     -- Set up the virtual window
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
