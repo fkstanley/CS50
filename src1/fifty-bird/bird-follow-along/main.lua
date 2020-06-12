@@ -29,6 +29,11 @@ local BACKGROUND_LOOPING_POINT = 413
 -- Create the bird
 local bird = Bird()
 
+-- Create a table of types (like a linked list / dynamic array)
+local pipes = {}
+
+local spawnTimer = 0
+
 --[[
     Sets up the initial window
 ]]
@@ -88,7 +93,23 @@ function love.update(dt)
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
+    spawnTimer = spawnTimer + dt
+
+    -- Spawns a new pipe per given time (2 seconds) at the right edge of the screen
+    if spawnTimer > 2 then
+        table.insert(pipes, Pipe())
+        spawnTimer = 0
+    end
+
     bird:update(dt)
+
+    for k, pipe in pairs(pipes) do
+        pipe:update(dt)
+
+        if pipe.x < -pipe.width then
+            table.remove(pipes, k)
+        end
+    end
 
     -- Resets the keyboard input after update
     love.keyboard.keysPressed = {}
@@ -102,6 +123,11 @@ function love.draw()
     push:start()
     -- negative scroll values for right to left scrolling
     love.graphics.draw(background, -backgroundScroll, 0)
+
+    for k, pipe in pairs(pipes) do
+        pipe:render()
+    end
+
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
 
     bird:render()
