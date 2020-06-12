@@ -32,6 +32,7 @@ local bird = Bird()
 -- Create a table of types (like a linked list / dynamic array)
 local pipes = {}
 
+-- Initialise a timer for the pipes to be generated
 local spawnTimer = 0
 
 --[[
@@ -88,11 +89,16 @@ function love.keyboard.wasPressed(key)
     end
 end
 
+
+--[[
+    Update per unit interval dt
+]]
 function love.update(dt)
     -- Set up scrolling values 
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
+    -- Increment the timer
     spawnTimer = spawnTimer + dt
 
     -- Spawns a new pipe per given time (2 seconds) at the right edge of the screen
@@ -101,11 +107,13 @@ function love.update(dt)
         spawnTimer = 0
     end
 
+    -- Update the bird
     bird:update(dt)
 
+    -- Update the pipes
     for k, pipe in pairs(pipes) do
         pipe:update(dt)
-
+        -- If the pipe is off the screen, remove from our table
         if pipe.x < -pipe.width then
             table.remove(pipes, k)
         end
@@ -124,12 +132,15 @@ function love.draw()
     -- negative scroll values for right to left scrolling
     love.graphics.draw(background, -backgroundScroll, 0)
 
+    -- Render pipes BEFORE the ground
     for k, pipe in pairs(pipes) do
         pipe:render()
     end
 
+    -- Render the scrolling ground
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
 
+    -- Render the bird
     bird:render()
 
     push:finish()
