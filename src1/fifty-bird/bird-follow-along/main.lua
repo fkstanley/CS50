@@ -44,6 +44,9 @@ function love.load()
         fullscreen = false,
         resizable = true
     })
+
+    -- Creates an empty table which will store what keys have been pressed
+    love.keyboard.keysPressed = {}
 end
 
 --[[
@@ -57,9 +60,23 @@ end
     Detects user input
 ]]
 function love.keypressed(key)
+    -- Store the keys which have been pressed in our table with value true
+    love.keyboard.keysPressed[key] = true
+
     -- If we press escape then quit the game
     if key == 'escape' then
         love.event.quit()
+    end
+end
+
+--[[
+    Queries if a key has been pressed
+]]
+function love.keyboard.wasPressed(key)
+    if love.keyboard.keysPressed[key] then
+        return true
+    else 
+        return false
     end
 end
 
@@ -69,6 +86,9 @@ function love.update(dt)
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
     bird:update(dt)
+
+    -- Resets the keyboard input after update
+    love.keyboard.keysPressed = {}
 end
 
 
