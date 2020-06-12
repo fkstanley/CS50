@@ -18,6 +18,7 @@ local groundScroll = 0
 local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
 
+-- The pixel at which our image begins looping
 local BACKGROUND_LOOPING_POINT = 413
 
 --[[
@@ -56,6 +57,7 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
+    -- Set up scrolling values 
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 end
@@ -66,6 +68,7 @@ end
 ]]
 function love.draw()
     push:start()
+    -- negative scroll values for right to left scrolling
     love.graphics.draw(background, -backgroundScroll, 0)
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
     push:finish()
