@@ -32,7 +32,8 @@ require 'Pipe'
 -- class representing pair of pipes together
 require 'PipePair'
 
--- all code related to game state and state machines
+-- all code related to game state and state machines, separate the modules with their own 
+-- update and render logic
 require 'StateMachine'
 require 'states/BaseState'
 require 'states/PlayState'
@@ -75,10 +76,12 @@ function love.load()
     love.window.setTitle('Fifty Bird')
 
     -- initialize our nice-looking retro text fonts
+    -- Different fonts required for different uses
     smallFont = love.graphics.newFont('font.ttf', 8)
     mediumFont = love.graphics.newFont('flappy.ttf', 14)
     flappyFont = love.graphics.newFont('flappy.ttf', 28)
     hugeFont = love.graphics.newFont('flappy.ttf', 56)
+    -- Default to title font
     love.graphics.setFont(flappyFont)
 
     -- initialize our virtual resolution
@@ -89,10 +92,13 @@ function love.load()
     })
 
     -- initialize state machine with all state-returning functions
+    -- prefix global variable with a lowercase g
+    -- keys map to functions which return our state
     gStateMachine = StateMachine {
         ['title'] = function() return TitleScreenState() end,
         ['play'] = function() return PlayState() end,
     }
+    -- change to title screen
     gStateMachine:change('title')
 
     -- initialize input table
@@ -124,6 +130,10 @@ function love.keyboard.wasPressed(key)
     end
 end
 
+--[[
+    Background scrolling is a global feature of the game 
+    NOT state dependent
+]]
 function love.update(dt)
     -- update background and ground scroll offsets
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % 
@@ -131,6 +141,7 @@ function love.update(dt)
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % GROUND_LOOPING_POINT
 
     -- now, we just update the state machine, which defers to the right state
+    -- looks at current state and updates that state (removes the if statement)
     gStateMachine:update(dt)
 
     -- reset input table
@@ -143,6 +154,7 @@ function love.draw()
     -- draw state machine between the background and ground, which defers
     -- render logic to the currently active state
     love.graphics.draw(background, -backgroundScroll, 0)
+    -- render relevant state
     gStateMachine:render()
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
     

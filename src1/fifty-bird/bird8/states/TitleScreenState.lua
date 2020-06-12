@@ -8,6 +8,7 @@
     display "Press Enter" and also our highest score.
 ]]
 
+-- Inherits from base state
 TitleScreenState = Class{__includes = BaseState}
 
 function TitleScreenState:update(dt)
