@@ -16,6 +16,9 @@ COUNTDOWN_TIME = 0.75
 function CountdownState:init()
     self.count = 3
     self.timer = 0
+    self.score = 0
+    self.bird = Bird()
+    self.pipePairs = {}
 end
 
 --[[
@@ -34,7 +37,12 @@ function CountdownState:update(dt)
 
         -- when 0 is reached, we should enter the PlayState
         if self.count == 0 then
-            gStateMachine:change('play')
+            gStateMachine:change('play', {
+                bird = self.bird,
+                pipePairs = self.pipePairs,
+                timer = self.timer,
+                score = self.score 
+            })
         end
     end
 end

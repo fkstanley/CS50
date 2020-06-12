@@ -29,10 +29,6 @@ end
 
 function PlayState:update(dt)
 
-    if love.keyboard.wasPressed('p') then
-        gStateMachine:change('pause')
-    end
-
     -- update timer for pipe spawning
     self.timer = self.timer + dt
 
@@ -83,6 +79,15 @@ function PlayState:update(dt)
         end
     end
 
+    if love.keyboard.wasPressed('p') then
+        gStateMachine:change('pause', {
+            score = self.score,
+            pipePairs = self.pipePairs,
+            bird = self.bird,
+            timer = self.timer
+        })
+    end
+
     -- simple collision between bird and all pipes in pairs
     for k, pair in pairs(self.pipePairs) do
         for l, pipe in pairs(pair.pipes) do
@@ -112,6 +117,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
+
     for k, pair in pairs(self.pipePairs) do
         pair:render()
     end
@@ -125,7 +131,12 @@ end
 --[[
     Called when this state is transitioned to from another state.
 ]]
-function PlayState:enter()
+function PlayState:enter(params)
+    self.bird = params.bird 
+    self.pipePairs = params.pipePairs
+    self.timer = params.timer
+    self.score = params.score
+    self.lastY = -PIPE_HEIGHT + math.random(80) + 20
     -- if we're coming from death, restart scrolling
     scrolling = true
 end
