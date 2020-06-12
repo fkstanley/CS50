@@ -4,6 +4,7 @@ Class = require 'class'
 
 require 'Bird'
 require 'Pipe'
+require 'PipePair'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -30,10 +31,13 @@ local BACKGROUND_LOOPING_POINT = 413
 local bird = Bird()
 
 -- Create a table of types (like a linked list / dynamic array)
-local pipes = {}
+local pipePairs = {}
 
 -- Initialise a timer for the pipes to be generated
 local spawnTimer = 0
+
+-- Tracks our last recorded Y value, makes the game possible to complete
+local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
 --[[
     Sets up the initial window
@@ -101,9 +105,13 @@ function love.update(dt)
     -- Increment the timer
     spawnTimer = spawnTimer + dt
 
-    -- Spawns a new pipe per given time (2 seconds) at the right edge of the screen
+    -- Clamps the pipe gaps
     if spawnTimer > 2 then
-        table.insert(pipes, Pipe())
+        local y = math.max(-PIPE_HEIGHT + 10, 
+                math.min(lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT)) 
+        lastY = Y
+
+        table.insert(pipePairs, PipePair(y))
         spawnTimer = 0
     end
 
@@ -111,11 +119,14 @@ function love.update(dt)
     bird:update(dt)
 
     -- Update the pipes
-    for k, pipe in pairs(pipes) do
-        pipe:update(dt)
-        -- If the pipe is off the screen, remove from our table
-        if pipe.x < -pipe.width then
-            table.remove(pipes, k)
+    for k, pair in pairs(pipePairs) do
+        pair:update(dt)
+    end
+
+    -- Remove any flapped pipes 
+    for k, pair in pairs(pipePairs) do
+        if pair.remove then
+            table.remove(pipePairs, k)
         end
     end
 
@@ -133,7 +144,7 @@ function love.draw()
     love.graphics.draw(background, -backgroundScroll, 0)
 
     -- Render pipes BEFORE the ground
-    for k, pipe in pairs(pipes) do
+    for k, pipe in pairs(pipePairs) do
         pipe:render()
     end
 
