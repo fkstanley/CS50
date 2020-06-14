@@ -14,6 +14,14 @@ function StartState:update(dt)
         gSounds['paddle-hit']:play()
     end
 
+    if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        gSounds['confirm']:play()
+
+        if highlighted == 1 then
+            gStateMachine:change('play')
+        end
+    end
+
     -- quit the game if we press escape
     if love.keyboard.wasPressed('escape') then
         love.event.quit()

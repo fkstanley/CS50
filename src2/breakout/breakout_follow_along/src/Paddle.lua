@@ -2,7 +2,7 @@ Paddle = Class{}
 
 function Paddle:init()
     -- initialise at the centre of the screen
-    self.x = VIRTUAL_WDITH / 2 - 32
+    self.x = VIRTUAL_WIDTH / 2 - 32
     self.y = VIRTUAL_HEIGHT - 32
 
     self.dx = 0
@@ -17,7 +17,7 @@ function Paddle:init()
     self.size = 2
 end
 
-function Paddle:ipdate(dt)
+function Paddle:update(dt)
     -- keyboard input
     if love.keyboard.isDown('left') then
         self.dx = -PADDLE_SPEED
@@ -31,7 +31,7 @@ function Paddle:ipdate(dt)
     if self.dx < 0 then
         self.x = math.max(0, self.x + self.dx * dt)
     else
-        self.x = math.min(VIRTUAL_WDITH - self.width, self.x + self.dx * dt)
+        self.x = math.min(VIRTUAL_WIDTH - self.width, self.x + self.dx * dt)
     end
 end
 
