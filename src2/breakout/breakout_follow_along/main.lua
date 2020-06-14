@@ -30,6 +30,10 @@ function love.load()
         ['particle'] = love.graphics.newImage('graphics/particle.png')
     }
 
+    -- Allows us to show only part of a texture
+    gFrames = {
+        ['paddles'] = GenerateQuadsPaddles(gTextures['main'])
+    }
 
     -- setup virtual screen
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {

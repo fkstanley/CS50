@@ -14,10 +14,14 @@ Class = require 'lib/class'
 -- some global constants
 require 'src/constants'
 
+require 'src/Paddle'
+
 --[[
     A simple state machine class
 ]]
 require 'src/StateMachine'
+
+require 'src/Util'
 
 require 'src/states/BaseState'
 require 'src/states/StartState'
