@@ -1,8 +1,12 @@
+-- Inherit from the base class
 StartState = Class{__includes = BaseState}
 
 -- Indicates if we highlight 'Start' or 'Highscores'
 local highlighted = 1
 
+--[[
+    Updates the variables per dt interval
+]]
 function StartState:update(dt)
     -- toggle highlighted if we press up or down
     if love.keyboard.wasPressed('up') or love.keyboard.wasPressed('down') then
@@ -10,11 +14,15 @@ function StartState:update(dt)
         gSounds['paddle-hit']:play()
     end
 
+    -- quit the game if we press escape
     if love.keyboard.wasPressed('escape') then
         love.event.quit()
     end
 end
 
+--[[
+    Draw the screen
+]]
 function StartState:render()
     -- title
     love.graphics.setFont(gFonts['large'])

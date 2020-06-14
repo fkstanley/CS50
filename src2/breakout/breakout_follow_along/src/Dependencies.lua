@@ -11,8 +11,12 @@ push = require 'lib/push'
 ]]
 Class = require 'lib/class'
 
+-- some global constants
 require 'src/constants'
 
+--[[
+    A simple state machine class
+]]
 require 'src/StateMachine'
 
 require 'src/states/BaseState'

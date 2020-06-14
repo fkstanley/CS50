@@ -1,3 +1,7 @@
+--[[
+    A simple state machine class
+]]
+
 BaseState = Class{}
 
 function BaseState:init() end
