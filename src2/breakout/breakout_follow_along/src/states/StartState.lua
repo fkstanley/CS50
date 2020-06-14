@@ -1,4 +1,4 @@
-StartState = Class{_includes = BaseState}
+StartState = Class{__includes = BaseState}
 
 -- Indicates if we highlight 'Start' or 'Highscores'
 local highlighted = 1
@@ -33,6 +33,7 @@ function StartState:render()
     if highlighted == 2 then
         love.graphics.setColor(0.4, 1, 1, 1)
     end
+    love.graphics.printf("HIGH SCORES", 0, VIRTUAL_HEIGHT / 2 + 90, VIRTUAL_WIDTH, 'center')
 
     -- reset colour
     love.graphics.setColor(1, 1, 1, 1)
