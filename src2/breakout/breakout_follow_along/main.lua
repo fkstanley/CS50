@@ -41,8 +41,7 @@ function love.load()
     -- import sounds 
     gSounds = {
         ['paddle-hit'] = love.audio.newSource('sounds/paddle_hit.wav', 'static'),
-        ['score'] = llove.graphics.printf("HIGH SCORES", 0, VIRTUAL_HEIGHT / 2 + 90,
-        VIRTUAL_WIDTH, 'center')ove.audio.newSource('sounds/score.wav', 'static'),
+        ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
         ['wall-hit'] = love.audio.newSource('sounds/wall_hit.wav', 'static'),
         ['confirm'] = love.audio.newSource('sounds/confirm.wav', 'static'),
         ['select'] = love.audio.newSource('sounds/select.wav', 'static'),
@@ -55,8 +54,7 @@ function love.load()
         ['high-score'] = love.audio.newSource('sounds/high_score.wav', 'static'),
         ['pause'] = love.audio.newSource('sounds/pause.wav', 'static'),
 
-        [love.graphics.printf("HIGH SCORES", 0, VIRTUAL_HEIGHT / 2 + 90,
-        VIRTUAL_WIDTH, 'center')'music'] = love.audio.newSource('sounds/music.wav', 'static')
+        ['music'] = love.audio.newSource('sounds/music.wav', 'static')
     }
 
     -- set up state machine
