@@ -47,7 +47,7 @@ function love.load()
         ['music'] = love.audio.newSource('sounds/music.wav', 'static')
     }
 
-    gStateMachine = gStateMachine {
+    gStateMachine = StateMachine {
         ['start'] = function() return StartState() end
     }
     gStateMachine:change('start')
@@ -60,7 +60,7 @@ function love.resize(w, h)
     push:resize(w, h)
 end
 
-function.love.update(dt)
+function love.update(dt)
     gStateMachine:update(dt)
 
     -- Reset keys pressed
@@ -73,4 +73,29 @@ end
 
 function love.keyboard.wasPressed(key)
     return love.keyboard.keysPressed[key]
+end
+
+function love.draw()
+    push:apply('start')
+
+    local backgroundWidth = gTextures['background']:getWidth()
+    local backgroundHeight = gTextures['background']:getHeight()
+
+    love.graphics.draw(gTextures['background'],
+        0, 0,
+        0,
+        VIRTUAL_WIDTH / (backgroundWidth - 1), VIRTUAL_HEIGHT / (backgroundHeight - 1))
+
+    gStateMachine:render()
+
+    displayFPS()
+    
+    push:apply('end')
+end
+
+function displayFPS()
+    -- simple FPS display across all states
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.setColor(0, 255, 0, 255)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 5, 5)
 end
