@@ -5,6 +5,12 @@ PlayState = Class{__includes = BaseState}
 ]]
 function PlayState:init()
     self.paddle = Paddle()
+
+    self.ball = Ball(1)
+    self.ball.dx = math.random(-200, 200)
+    self.ball.dy = math.random(-50, -60)
+    self.ball.x = VIRTUAL_WIDTH / 2 - 4
+    self.ball.y = VIRTUAL_HEIGHT - 42
 end
 
 --[[
@@ -32,8 +38,14 @@ function PlayState:update(dt)
         return
     end
 
-    -- call the update method in the paddle class
+    -- call the update method in the paddle and ball class
     self.paddle:update(dt)
+    self.ball:update(dt)
+
+    if self.ball:collides(self.paddle) then
+        self.ball.dy = -self.ball.dy
+        gSounds['paddle-hit']:play()
+    end
 
     
 end
@@ -41,6 +53,7 @@ end
 -- draw the screen
 function PlayState:render()
     self.paddle:render()
+    self.ball:render()
 
     -- crop and draw the paddle
     if self.paused then

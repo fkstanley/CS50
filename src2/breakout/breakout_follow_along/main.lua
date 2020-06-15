@@ -32,7 +32,8 @@ function love.load()
 
     -- Allows us to show only part of a texture
     gFrames = {
-        ['paddles'] = GenerateQuadsPaddles(gTextures['main'])
+        ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
+        ['balls'] = GenerateQuadsBalls(gTextures['main'])
     }
 
     -- setup virtual screen
