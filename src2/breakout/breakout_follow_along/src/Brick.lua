@@ -1,7 +1,7 @@
 Brick = Class{}
 
 -- colours to be used in particle system
-paletterColors = {
+paletteColors = {
     -- blue
     [1] = {
         ['r'] = 0.40,
@@ -45,9 +45,33 @@ function Brick:init(x, y)
 
     -- to see if the brick should be rendered
     self.inPlay = true
+
+    -- particle system emitted on hit
+    self.psystem = love.graphics.newParticleSystem(gTextures['particle'], 64)
+    -- lasts between 0.5 to 1 seconds
+    self.psystem:setParticleLifetime(0.5, 1)
+    -- give it an acceleration of anywhere between X1,Y1 and X2,Y2 (0, 0) and (80, 80) here
+    -- gives generally downward 
+    self.psystem:setLinearAcceleration(-15, 0, 15, 80)
+    -- spread particles 'naturally'
+    self.psystem:setAreaSpread('normal', 10, 10)
+
 end
 
 function Brick:hit()
+    -- particle system interpolates between two colours with varying alpha
+    self.psystem:setColors(
+        paletteColors[self.color].r,
+        paletteColors[self.color].g,
+        paletteColors[self.color].b,
+        (55 * (self.tier + 1)) / 255,
+        paletteColors[self.color].r,
+        paletteColors[self.color].g,
+        paletteColors[self.color].b,
+        0
+    )
+    self.psystem:emit(64)
+
     gSounds['brick-hit-2']:stop()
     gSounds['brick-hit-2']:play()
 
@@ -75,6 +99,10 @@ function Brick:hit()
     end
 end
 
+function Brick:update(dt)
+    self.psystem:update(dt)
+end
+
 function Brick:render()
     if self.inPlay then
         love.graphics.draw(gTextures['main'],
@@ -82,5 +110,9 @@ function Brick:render()
             self.x,
             self.y)
     end
+end
+
+function Brick:renderParticles()
+    love.graphics.draw(self.psystem, self.x + 16, self.y + 8)
 end
 

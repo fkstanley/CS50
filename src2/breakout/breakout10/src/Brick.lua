@@ -92,7 +92,7 @@ function Brick:hit()
         paletteColors[self.color].r,
         paletteColors[self.color].g,
         paletteColors[self.color].b,
-        55 * (self.tier + 1),
+        (55 * (self.tier + 1)) / 255,
         paletteColors[self.color].r,
         paletteColors[self.color].g,
         paletteColors[self.color].b,
