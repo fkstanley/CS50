@@ -54,7 +54,7 @@ function Brick:init(x, y)
     -- gives generally downward 
     self.psystem:setLinearAcceleration(-15, 0, 15, 80)
     -- spread particles 'naturally'
-    self.psystem:setAreaSpread('normal', 10, 10)
+    self.psystem:setEmissionArea('normal', 10, 10)
 
 end
 
