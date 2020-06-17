@@ -3,16 +3,16 @@ PlayState = Class{__includes = BaseState}
 --[[
     Initialises the state, creates the paddle
 ]]
-function PlayState:init()
-    self.paddle = Paddle()
+function PlayState:enter(params)
+    self.paddle = params.paddle
+    self.bricks = params.bricks
+    self.health = params.health
+    self.score = params.score
+    self.ball = params.ball
 
-    self.ball = Ball(1)
+    -- give ball random starting velocity
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
-    self.ball.x = VIRTUAL_WIDTH / 2 - 4
-    self.ball.y = VIRTUAL_HEIGHT - 42
-
-    self.bricks = LevelMaker.createMap()
 end
 
 --[[
@@ -86,6 +86,9 @@ function PlayState:render()
 
     self.paddle:render()
     self.ball:render()
+
+    renderScore(self.score)
+    renderHealth(self.health)
 
     -- crop and draw the paddle
     if self.paused then
