@@ -52,9 +52,30 @@ function PlayState:update(dt)
     for k, brick in pairs(self.bricks) do
         if brick.inPlay and self.ball:collides(brick) then
             brick:hit()
+
+            --[[
+                Collision code for bricks
+            ]]
+
+            if self.ball.x + 2 < brick.x and self.ball.dx > 0 then
+                self.ball.dx = -self.ball.dx
+                self.ball.x = brick.x - 8
+            elseif self.ball.x + 6 > brick.x + brick.width and self.ball.dx < 0 then
+                self.ball.dx = -self.ball.dx
+                self.ball.x = brick.x + 32
+            elseif self.ball.y < brick.y then
+                self.ball.dy = -self.ball.dy
+                self.ball.y = brick.y - 8
+            else
+                self.ball.dy = -self.ball.dy
+                self.ball.y = brick.y + 16
+            end
+
+            -- slightly scale to speed up game
+            self.ball.dy = self.ball.dy * 1.02
+            break
         end
     end
-    
 end
 
 -- draw the screen
