@@ -1,5 +1,39 @@
 Brick = Class{}
 
+-- colours to be used in particle system
+paletterColors = {
+    -- blue
+    [1] = {
+        ['r'] = 0.40,
+        ['g'] = 0.61,
+        ['b'] = 1
+    },
+    -- green
+    [2] = {
+        ['r'] = 0.42,
+        ['g'] = 0.75,
+        ['b'] = 0.18
+    },
+    -- red
+    [3] = {
+        ['r'] = 0.85,
+        ['g'] = 0.34,
+        ['b'] = 0.39
+    },
+    -- purple
+    [4] = {
+        ['r'] = 0.84,
+        ['g'] = 0.48,
+        ['b'] = 0.73
+    },
+    -- gold
+    [5] = {
+        ['r'] = 0.98,
+        ['g'] = 0.95,
+        ['b'] = 0.21
+    }
+}
+
 function Brick:init(x, y)
     self.tier = 0
     self.color = 1
