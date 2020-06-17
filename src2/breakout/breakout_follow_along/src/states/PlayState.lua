@@ -51,6 +51,9 @@ function PlayState:update(dt)
 
     for k, brick in pairs(self.bricks) do
         if brick.inPlay and self.ball:collides(brick) then
+
+            self.score = self.score + 10
+
             brick:hit()
 
             --[[
@@ -76,6 +79,26 @@ function PlayState:update(dt)
             break
         end
     end
+
+    -- If ball goes below play then decrease health and change state
+    if self.ball.y >= VIRTUAL_HEIGHT then
+        self.health = self.health - 1
+        gSounds['hurt']:play()
+
+        if self.health == 0 then 
+            gStateMachine:change('game-over', {
+                score = self.score
+            })
+        else
+            gStateMachine:change('serve', {
+                paddle = self.paddle,
+                bricks = self.bricks,
+                health = self.health,
+                score = self.score
+            })
+        end
+    end
+
 end
 
 -- draw the screen
