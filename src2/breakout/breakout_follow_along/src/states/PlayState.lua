@@ -9,6 +9,7 @@ function PlayState:enter(params)
     self.health = params.health
     self.score = params.score
     self.ball = params.ball
+    self.level = params.level
 
     -- give ball random starting velocity
     self.ball.dx = math.random(-200, 200)
@@ -68,6 +69,19 @@ function PlayState:update(dt)
             self.score = self.score + (brick.tier * 200 * brick.color * 25)
 
             brick:hit()
+
+            -- go to victory screen if no bricks left
+            if self:checkVictory() then
+                gSounds['victory']:play()
+
+                gStateMachine:change('victory', {
+                    level = self.level,
+                    paddle = self.paddle,
+                    health = self.health,
+                    score = self.score,
+                    ball = self.ball
+                })
+            end
 
             --[[
                 Collision code for bricks
@@ -134,9 +148,21 @@ function PlayState:render()
     renderScore(self.score)
     renderHealth(self.health)
 
-    -- crop and draw the paddle
+    -- pause text (if the game is paused)
     if self.paused then
         love.graphics.setFont(gFonts['large'])
         love.graphics.printf("PAUSED", 0, VIRTUAL_HEIGHT / 2 - 16, VIRTUAL_WIDTH, 'center')
     end
+end
+
+function PlayState:checkVictory()
+    --[[
+    for k, brick in pairs(self.bricks) do
+        if brick.inPlay then
+            return false
+        end
+    end
+    ]]
+    
+    return true
 end
