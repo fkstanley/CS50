@@ -45,14 +45,27 @@ function PlayState:update(dt)
     self.ball:update(dt)
 
     if self.ball:collides(self.paddle) then
+        -- raise ball above paddle if it goes below it
+        self.ball.y = self.paddle.y - 8
         self.ball.dy = -self.ball.dy
+
+        -- edit collision code for paddle depending on where it is hit
+
+        -- if hit on left side whilst moving left...
+        if self.ball.x < self.ball.x + (self.paddle.width / 2) and self.paddle.dx < 0 then
+            self.ball.dx = -50 + (-8 * (self.paddle.x + self.paddle.width / 2 - self.ball.x))
+        -- if hit on right side whilst moving right...
+        elseif self.ball.x > self.paddle.x +(self.paddle.width / 2) and self.paddle.dx > 0 then
+            self.ball.dx = 50 + (8 * math.abs(self.paddle.x + self.paddle.width / 2 - self.ball.x))
+        end
+
         gSounds['paddle-hit']:play()
     end
 
     for k, brick in pairs(self.bricks) do
         if brick.inPlay and self.ball:collides(brick) then
 
-            self.score = self.score + 10
+            self.score = self.score + (brick.tier * 200 * brick.color * 25)
 
             brick:hit()
 
