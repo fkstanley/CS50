@@ -92,6 +92,11 @@ function PlayState:update(dt)
                 -- can't go above 3 health
                 self.health = math.min(3, self.health + 1)
 
+                local currSkin = self.paddle.skin
+                local paddleSize = math.min(4, self.paddle.size + 1)
+                local currX = self.paddle.x - (self.paddle.width / 2)
+                self.paddle = Paddle(currSkin, paddleSize, currX)
+
                 -- multiply recover points by 2
                 self.recoverPoints = math.min(100000, self.recoverPoints * 2)
 
@@ -167,12 +172,10 @@ function PlayState:update(dt)
     -- if ball goes below bounds, revert to serve state and decrease health
     if self.ball.y >= VIRTUAL_HEIGHT then
         self.health = self.health - 1
-        
+
         -- reduce the paddle size
-        local paddleSize = self.paddle.size
-        if not (paddleSize == 1) then
-            paddleSize = paddleSize - 1
-        end
+        local paddleSize = math.max(1, self.paddle.size - 1)
+        local currX = self.paddle.x - (self.paddle.width / 2)
         
         gSounds['hurt']:play()
 
@@ -183,7 +186,7 @@ function PlayState:update(dt)
             })
         else
             gStateMachine:change('serve', {
-                paddle = Paddle(self.paddle.skin, paddleSize),
+                paddle = Paddle(self.paddle.skin, paddleSize, currX),
                 bricks = self.bricks,
                 health = self.health,
                 score = self.score,

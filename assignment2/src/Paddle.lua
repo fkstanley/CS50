@@ -19,9 +19,9 @@ Paddle = Class{}
     Our Paddle will initialize at the same spot every time, in the middle
     of the world horizontally, toward the bottom.
 ]]
-function Paddle:init(skin, size)
+function Paddle:init(skin, size, x)
     -- x is placed in the middle
-    self.x = VIRTUAL_WIDTH / 2 - 32
+    self.x = x
 
     -- y is placed a little above the bottom edge of the screen
     self.y = VIRTUAL_HEIGHT - 32
