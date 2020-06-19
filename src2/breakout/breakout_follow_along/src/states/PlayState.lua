@@ -86,7 +86,6 @@ function PlayState:update(dt)
             --[[
                 Collision code for bricks
             ]]
-
             if self.ball.x + 2 < brick.x and self.ball.dx > 0 then
                 self.ball.dx = -self.ball.dx
                 self.ball.x = brick.x - 8
@@ -121,7 +120,8 @@ function PlayState:update(dt)
                 paddle = self.paddle,
                 bricks = self.bricks,
                 health = self.health,
-                score = self.score
+                score = self.score,
+                level = self.level
             })
         end
     end
@@ -156,7 +156,7 @@ function PlayState:render()
 end
 
 function PlayState:checkVictory()
-    
+
     for k, brick in pairs(self.bricks) do
         if brick.inPlay then
             return false
