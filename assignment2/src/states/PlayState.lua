@@ -29,6 +29,8 @@ function PlayState:enter(params)
     self.ball = params.ball
     self.level = params.level
 
+    self.power = PowerUp(VIRTUAL_WIDTH / 2, 0, 7)
+
     self.recoverPoints = 5000
 
     -- give ball random starting velocity
@@ -53,6 +55,7 @@ function PlayState:update(dt)
     -- update positions based on velocity
     self.paddle:update(dt)
     self.ball:update(dt)
+    self.power:update(dt)
 
     if self.ball:collides(self.paddle) then
         -- raise ball above paddle in case it goes below it, then reverse dy
@@ -220,6 +223,7 @@ function PlayState:render()
 
     self.paddle:render()
     self.ball:render()
+    self.power:render()
 
     renderScore(self.score)
     renderHealth(self.health)
