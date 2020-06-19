@@ -16,6 +16,8 @@
 
 PlayState = Class{__includes = BaseState}
 
+powerCounter = 1
+
 --[[
     We initialize what's in our PlayState via a state table that we pass between
     states as we go from playing to serving.
@@ -29,7 +31,7 @@ function PlayState:enter(params)
     self.ball = params.ball
     self.level = params.level
 
-    self.power = PowerUp(VIRTUAL_WIDTH / 2, 0, 7)
+    self.powers = {}
 
     self.recoverPoints = 5000
 
@@ -55,7 +57,10 @@ function PlayState:update(dt)
     -- update positions based on velocity
     self.paddle:update(dt)
     self.ball:update(dt)
-    self.power:update(dt)
+
+    for k, power in pairs(self.powers) do
+        power:update(dt)
+    end
 
     if self.ball:collides(self.paddle) then
         -- raise ball above paddle in case it goes below it, then reverse dy
@@ -84,6 +89,11 @@ function PlayState:update(dt)
         -- only check collision if we're in play
         if brick.inPlay and self.ball:collides(brick) then
 
+            if math.random(10) == 1 then
+                self.powers[powerCounter] = PowerUp(brick.x + 8, brick.y + 8, 7)
+                powerCounter = powerCounter + 1
+            end
+            
             -- add to score
             self.score = self.score + (brick.tier * 200 + brick.color * 25)
 
@@ -221,9 +231,12 @@ function PlayState:render()
         brick:renderParticles()
     end
 
+    for k, power in pairs(self.powers) do
+        power:render()
+    end
+
     self.paddle:render()
     self.ball:render()
-    self.power:render()
 
     renderScore(self.score)
     renderHealth(self.health)
