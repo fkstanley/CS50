@@ -4,6 +4,10 @@ StartState = Class{__includes = BaseState}
 -- Indicates if we highlight 'Start' or 'Highscores'
 local highlighted = 1
 
+function StartState:enter(params)
+    self.highScores = params.highScores
+end
+
 --[[
     Updates the variables per dt interval
 ]]
@@ -24,6 +28,10 @@ function StartState:update(dt)
                 level = 1,
                 health = 3,
                 score = 0
+            })
+        else 
+            gStateMachine:change('high-scores', {
+                highScores = self.highScores
             })
         end
     end
