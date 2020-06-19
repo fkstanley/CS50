@@ -17,6 +17,7 @@
 PlayState = Class{__includes = BaseState}
 
 powerCounter = 1
+noBalls = 1
 
 --[[
     We initialize what's in our PlayState via a state table that we pass between
@@ -83,13 +84,19 @@ function PlayState:update(dt)
         gSounds['paddle-hit']:play()
     end
 
+    for k, power in pairs(self.powers) do
+        if power:collides(self.paddle) then
+            
+        end
+    end
+
     -- detect collision across all bricks with the ball
     for k, brick in pairs(self.bricks) do
 
         -- only check collision if we're in play
         if brick.inPlay and self.ball:collides(brick) then
 
-            if math.random(10) == 1 then
+            if math.random(5) == 1 then
                 self.powers[powerCounter] = PowerUp(brick.x + 8, brick.y + 8, 7)
                 powerCounter = powerCounter + 1
             end
