@@ -167,6 +167,13 @@ function PlayState:update(dt)
     -- if ball goes below bounds, revert to serve state and decrease health
     if self.ball.y >= VIRTUAL_HEIGHT then
         self.health = self.health - 1
+        
+        -- reduce the paddle size
+        local paddleSize = self.paddle.size
+        if not (paddleSize == 1) then
+            paddleSize = paddleSize - 1
+        end
+        
         gSounds['hurt']:play()
 
         if self.health == 0 then
@@ -176,7 +183,7 @@ function PlayState:update(dt)
             })
         else
             gStateMachine:change('serve', {
-                paddle = self.paddle,
+                paddle = Paddle(self.paddle.skin, paddleSize),
                 bricks = self.bricks,
                 health = self.health,
                 score = self.score,
