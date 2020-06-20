@@ -16,8 +16,8 @@
 Ball = Class{}
 
 function Ball:init(skin)
-    self.x = 0
-    self.y = 0
+    self.x = VIRTUAL_WIDTH / 2
+    self.y = VIRTUAL_HEIGHT / 2
     -- simple positional and dimensional variables
     self.width = 8
     self.height = 8

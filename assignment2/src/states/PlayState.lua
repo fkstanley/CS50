@@ -59,8 +59,10 @@ function PlayState:update(dt)
     -- update positions based on velocity
     self.paddle:update(dt)
     self.ball:update(dt)
-    ball2:update(dt)
-
+    if twoBalls then
+        ball2:update(dt)
+    end
+    
     for k, power in pairs(self.powers) do
         power:update(dt)
     end
@@ -86,118 +88,46 @@ function PlayState:update(dt)
         gSounds['paddle-hit']:play()
     end
 
+    if twoBalls then
+        if ball2:collides(self.paddle) then
+
+            ball2.y = self.paddle.y - 8
+            ball2.dy = -ball2.dy
+    
+            if ball2.x < self.paddle.x + (self.paddle.width / 2) and self.paddle.dx < 0 then
+                ball2.dx = -50 + -(8 * (self.paddle.x + self.paddle.width / 2 - ball2.x))
+            
+            elseif ball2.x > self.paddle.x + (self.paddle.width / 2) and self.paddle.dx > 0 then
+                ball2.dx = 50 + (8 * math.abs(self.paddle.x + self.paddle.width / 2 - ball2.x))
+            end
+    
+            gSounds['paddle-hit']:play()
+        end
+    end
+
     for k, power in pairs(self.powers) do
         if power:collides(self.paddle) then
             ball2 = Ball(math.random(7))
             ball2.x = self.ball.x
             ball2.y = self.ball.y
-            ball2.dx = -self.ball.dx
-            ball2.dy = self.ball.dy
+            ball2.dx = math.random(-200, 200)
+            ball2.dy = math.random(-50, -60)
             twoBalls = true
         end
     end
 
-    -- detect collision across all bricks with the ball
-    for k, brick in pairs(self.bricks) do
+    self:checkBrickCollisions(self.ball, self.bricks)
+    self:checkBrickCollisions(ball2, self.bricks)
 
-        -- only check collision if we're in play
-        if brick.inPlay and self.ball:collides(brick) then
-
-            if math.random(5) == 1 then
-                self.powers[powerCounter] = PowerUp(brick.x + 8, brick.y + 8, 7)
-                powerCounter = powerCounter + 1
-            end
-            
-            -- add to score
-            self.score = self.score + (brick.tier * 200 + brick.color * 25)
-
-            -- trigger the brick's hit function, which removes it from play
-            brick:hit()
-
-            -- if we have enough points, recover a point of health
-            if self.score > self.recoverPoints then
-                -- can't go above 3 health
-                self.health = math.min(3, self.health + 1)
-
-                local currSkin = self.paddle.skin
-                local paddleSize = math.min(4, self.paddle.size + 1)
-                local currX = self.paddle.x - (self.paddle.width / 2)
-                self.paddle = Paddle(currSkin, paddleSize, currX)
-
-                -- multiply recover points by 2
-                self.recoverPoints = math.min(100000, self.recoverPoints * 2)
-
-                -- play recover sound effect
-                gSounds['recover']:play()
-            end
-
-            -- go to our victory screen if there are no more bricks left
-            if self:checkVictory() then
-                gSounds['victory']:play()
-
-                gStateMachine:change('victory', {
-                    level = self.level,
-                    paddle = self.paddle,
-                    health = self.health,
-                    score = self.score,
-                    highScores = self.highScores,
-                    ball = self.ball,
-                    recoverPoints = self.recoverPoints
-                })
-            end
-
-            --
-            -- collision code for bricks
-            --
-            -- we check to see if the opposite side of our velocity is outside of the brick;
-            -- if it is, we trigger a collision on that side. else we're within the X + width of
-            -- the brick and should check to see if the top or bottom edge is outside of the brick,
-            -- colliding on the top or bottom accordingly 
-            --
-
-            -- left edge; only check if we're moving right, and offset the check by a couple of pixels
-            -- so that flush corner hits register as Y flips, not X flips
-            if self.ball.x + 2 < brick.x and self.ball.dx > 0 then
-                
-                -- flip x velocity and reset position outside of brick
-                self.ball.dx = -self.ball.dx
-                self.ball.x = brick.x - 8
-            
-            -- right edge; only check if we're moving left, , and offset the check by a couple of pixels
-            -- so that flush corner hits register as Y flips, not X flips
-            elseif self.ball.x + 6 > brick.x + brick.width and self.ball.dx < 0 then
-                
-                -- flip x velocity and reset position outside of brick
-                self.ball.dx = -self.ball.dx
-                self.ball.x = brick.x + 32
-            
-            -- top edge if no X collisions, always check
-            elseif self.ball.y < brick.y then
-                
-                -- flip y velocity and reset position outside of brick
-                self.ball.dy = -self.ball.dy
-                self.ball.y = brick.y - 8
-            
-            -- bottom edge if no X collisions or top collision, last possibility
-            else
-                
-                -- flip y velocity and reset position outside of brick
-                self.ball.dy = -self.ball.dy
-                self.ball.y = brick.y + 16
-            end
-
-            -- slightly scale the y velocity to speed up the game, capping at +- 150
-            if math.abs(self.ball.dy) < 150 then
-                self.ball.dy = self.ball.dy * 1.02
-            end
-
-            -- only allow colliding with one brick, for corners
-            break
-        end
+    if ball2.y >= VIRTUAL_HEIGHT then
+        twoBalls = false
     end
 
     -- if ball goes below bounds, revert to serve state and decrease health
-    if self.ball.y >= VIRTUAL_HEIGHT then
+    if self.ball.y >= VIRTUAL_HEIGHT and twoBalls then
+        self.ball = ball2
+        twoBalls = false
+    elseif self.ball.y >= VIRTUAL_HEIGHT then
         self.health = self.health - 1
 
         -- reduce the paddle size
@@ -274,4 +204,105 @@ function PlayState:checkVictory()
     end
 
     return true
+end
+
+function PlayState:checkBrickCollisions(ball, bricks)
+    -- detect collision across all bricks with the ball
+    for k, brick in pairs(bricks) do
+
+        -- only check collision if we're in play
+        if brick.inPlay and ball:collides(brick) then
+
+            if math.random(5) == 1 then
+                self.powers[powerCounter] = PowerUp(brick.x + 8, brick.y + 8, 7)
+                powerCounter = powerCounter + 1
+            end
+            
+            -- add to score
+            self.score = self.score + (brick.tier * 200 + brick.color * 25)
+
+            -- trigger the brick's hit function, which removes it from play
+            brick:hit()
+
+            -- if we have enough points, recover a point of health
+            if self.score > self.recoverPoints then
+                -- can't go above 3 health
+                self.health = math.min(3, self.health + 1)
+
+                local currSkin = self.paddle.skin
+                local paddleSize = math.min(4, self.paddle.size + 1)
+                local currX = self.paddle.x - (self.paddle.width / 2)
+                self.paddle = Paddle(currSkin, paddleSize, currX)
+
+                -- multiply recover points by 2
+                self.recoverPoints = math.min(100000, self.recoverPoints * 2)
+
+                -- play recover sound effect
+                gSounds['recover']:play()
+            end
+
+            -- go to our victory screen if there are no more bricks left
+            if self:checkVictory() then
+                gSounds['victory']:play()
+
+                gStateMachine:change('victory', {
+                    level = self.level,
+                    paddle = self.paddle,
+                    health = self.health,
+                    score = self.score,
+                    highScores = self.highScores,
+                    ball = self.ball,
+                    recoverPoints = self.recoverPoints
+                })
+            end
+
+            --
+            -- collision code for bricks
+            --
+            -- we check to see if the opposite side of our velocity is outside of the brick;
+            -- if it is, we trigger a collision on that side. else we're within the X + width of
+            -- the brick and should check to see if the top or bottom edge is outside of the brick,
+            -- colliding on the top or bottom accordingly 
+            --
+
+            -- left edge; only check if we're moving right, and offset the check by a couple of pixels
+            -- so that flush corner hits register as Y flips, not X flips
+            if ball.x + 2 < brick.x and ball.dx > 0 then
+                
+                -- flip x velocity and reset position outside of brick
+                ball.dx = -ball.dx
+                ball.x = brick.x - 8
+            
+            -- right edge; only check if we're moving left, , and offset the check by a couple of pixels
+            -- so that flush corner hits register as Y flips, not X flips
+            elseif ball.x + 6 > brick.x + brick.width and ball.dx < 0 then
+                
+                -- flip x velocity and reset position outside of brick
+                ball.dx = -ball.dx
+                ball.x = brick.x + 32
+            
+            -- top edge if no X collisions, always check
+            elseif ball.y < brick.y then
+                
+                -- flip y velocity and reset position outside of brick
+                ball.dy = -ball.dy
+                ball.y = brick.y - 8
+            
+            -- bottom edge if no X collisions or top collision, last possibility
+            else
+                
+                -- flip y velocity and reset position outside of brick
+                ball.dy = -ball.dy
+                ball.y = brick.y + 16
+            end
+
+            -- slightly scale the y velocity to speed up the game, capping at +- 150
+            if math.abs(ball.dy) < 150 then
+                ball.dy = ball.dy * 1.02
+            end
+
+            -- only allow colliding with one brick, for corners
+            break
+        end
+    end
 end
