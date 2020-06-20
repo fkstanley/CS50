@@ -18,6 +18,7 @@ PlayState = Class{__includes = BaseState}
 
 powerCounter = 1
 ball2 = Ball(math.random(7))
+powerUpTimer = 30
 twoBalls = false
 
 --[[
@@ -43,6 +44,8 @@ function PlayState:enter(params)
 end
 
 function PlayState:update(dt)
+    powerUpTimer = powerUpTimer + dt
+
     if self.paused then
         if love.keyboard.wasPressed('space') then
             self.paused = false
@@ -213,9 +216,10 @@ function PlayState:checkBrickCollisions(ball, bricks)
         -- only check collision if we're in play
         if brick.inPlay and ball:collides(brick) then
 
-            if math.random(5) == 1 then
+            if math.random(10) == 1 and powerUpTimer > 30 then
                 self.powers[powerCounter] = PowerUp(brick.x + 8, brick.y + 8, 7)
                 powerCounter = powerCounter + 1
+                powerUpTimer = 0
             end
             
             -- add to score
