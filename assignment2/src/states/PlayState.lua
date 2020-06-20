@@ -17,7 +17,8 @@
 PlayState = Class{__includes = BaseState}
 
 powerCounter = 1
-noBalls = 1
+ball2 = Ball(math.random(7))
+twoBalls = false
 
 --[[
     We initialize what's in our PlayState via a state table that we pass between
@@ -58,6 +59,7 @@ function PlayState:update(dt)
     -- update positions based on velocity
     self.paddle:update(dt)
     self.ball:update(dt)
+    ball2:update(dt)
 
     for k, power in pairs(self.powers) do
         power:update(dt)
@@ -86,7 +88,12 @@ function PlayState:update(dt)
 
     for k, power in pairs(self.powers) do
         if power:collides(self.paddle) then
-            
+            ball2 = Ball(math.random(7))
+            ball2.x = self.ball.x
+            ball2.y = self.ball.y
+            ball2.dx = -self.ball.dx
+            ball2.dy = self.ball.dy
+            twoBalls = true
         end
     end
 
@@ -244,6 +251,10 @@ function PlayState:render()
 
     self.paddle:render()
     self.ball:render()
+
+    if twoBalls then
+        ball2:render()
+    end
 
     renderScore(self.score)
     renderHealth(self.health)
