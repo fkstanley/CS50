@@ -86,7 +86,7 @@ function love.draw()
 
     -- iterate over bird table for drawing
     for k, bird in pairs(birds) do
-        love.graphics.setColor(1, 1, 1, bird.opacity)
+        love.graphics.setColor(0.25, 0.25, 1, bird.opacity)
         love.graphics.draw(flappySprite, bird.x, bird.y)
     end
 
