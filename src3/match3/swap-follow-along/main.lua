@@ -1,4 +1,5 @@
 push = require 'push'
+Timer = require 'knife.timer'
 
 require 'Util'
 
@@ -15,7 +16,7 @@ function love.load()
     -- individual tile quads
     tileQuads = GenerateQuads(tileSprite, 32, 32)
 
-    --board of tiles
+    --board of tiless
     board = generateBoard()
 
     -- the currently selected tile
@@ -68,27 +69,40 @@ function love.keypressed(key)
             highlightedTile = true
             highlightedX, highlightedY = selectedTile.gridX, selectedTile.gridY
         else
+            -- swap tiles
             local tile1 = selectedTile
             local tile2 = board[highlightedY][highlightedX]
 
+            -- swap tile information
             local tempX, tempY = tile2.x, tile2.y
             local tempgridX, tempgridY = tile2.gridX, tile2.gridY
 
+            -- swap places in the board
             local tempTile = tile1
             board[tile1.gridY][tile1.gridX] = tile2
             board[tile2.gridY][tile2.gridX] = tempTile
 
-            tile2.x, tile2.y = tile1.x, tile1.y
+            -- tween x and y coordinates instead of instantly setting them
+            Timer.tween(0.2, {
+                [tile2] = {x = tile1.x, y = tile1.y},
+                [tile1] = {x = tempX, y = tempY}
+            })
+
+            -- instantly set grid variables
             tile2.gridX, tile2.gridY = tile1.gridX, tile1.gridY
-            tile1.x, tile1.y = tempX, tempY
             tile1.gridX, tile1.gridY = tempgridX, tempgridY
 
+            -- unhighlight
             highlightedTile = false
 
+            -- reset selection because of the swap
             selectedTile = tile2
         end
     end
+end
 
+function love.update(dt)
+    Timer.update(dt)
 end
 
 function love.draw()
