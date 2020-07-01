@@ -93,5 +93,6 @@ function love.draw()
     end
 
     love.graphics.print(tostring(timer), 4, 4)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 4, VIRTUAL_HEIGHT - 16)
     push:finish()
 end
