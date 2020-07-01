@@ -42,7 +42,7 @@ function love.load()
             -- floating-point
             rate = math.random() + math.random(TIMER_MAX - 1),
 
-            -- start with an opacity of 0 and fade to 255 over duration as well
+            -- start with an opacity of 0 and fade to 1 over duration as well
             opacity = 0
         })
     end
@@ -54,7 +54,7 @@ function love.load()
     for k, bird in pairs(birds) do
         Timer.tween(bird.rate, {
             -- tween bird's X to endX over bird.rate seconds
-            [bird] = { x = endX, opacity = 255 }
+            [bird] = { x = endX, opacity = 1 }
         })
     end
 
@@ -86,7 +86,7 @@ function love.draw()
 
     -- iterate over bird table for drawing
     for k, bird in pairs(birds) do
-        love.graphics.setColor(255, 255, 255, bird.opacity)
+        love.graphics.setColor(1, 1, 1, bird.opacity)
         love.graphics.draw(flappySprite, bird.x, bird.y)
     end
 
