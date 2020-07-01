@@ -188,7 +188,7 @@ function drawBoard(offsetX, offsetY)
 
     -- drawing currently selected tile:
     -- almost opaque red color
-    love.graphics.setColor(255, 0, 0, 234)
+    love.graphics.setColor(1, 0, 0, 234 / 255)
 
     -- thicker line width than normal
     love.graphics.setLineWidth(4)
