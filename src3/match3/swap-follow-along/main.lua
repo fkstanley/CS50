@@ -62,6 +62,33 @@ function love.keypressed(key)
         end
     end
 
+    -- allows us to swap two tiles
+    if key == 'enter' or key == 'return' then
+        if not highlightedTile then
+            highlightedTile = true
+            highlightedX, highlightedY = selectedTile.gridX, selectedTile.gridY
+        else
+            local tile1 = selectedTile
+            local tile2 = board[highlightedY][highlightedX]
+
+            local tempX, tempY = tile2.x, tile2.y
+            local tempgridX, tempgridY = tile2.gridX, tile2.gridY
+
+            local tempTile = tile1
+            board[tile1.gridY][tile1.gridX] = tile2
+            board[tile2.gridY][tile2.gridX] = tempTile
+
+            tile2.x, tile2.y = tile1.x, tile1.y
+            tile2.gridX, tile2.gridY = tile1.gridX, tile1.gridY
+            tile1.x, tile1.y = tempX, tempY
+            tile1.gridX, tile1.gridY = tempgridX, tempgridY
+
+            highlightedTile = false
+
+            selectedTile = tile2
+        end
+    end
+
 end
 
 function love.draw()
