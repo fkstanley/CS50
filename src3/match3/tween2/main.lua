@@ -51,6 +51,8 @@ function love.load()
     endX = VIRTUAL_WIDTH - flappySprite:getWidth()
 
     -- iterate over all birds and tween to the endX location
+    -- linearly change the x and opcaity values towards endX and 1
+    -- takes a definition as an argument
     for k, bird in pairs(birds) do
         Timer.tween(bird.rate, {
             -- tween bird's X to endX over bird.rate seconds
