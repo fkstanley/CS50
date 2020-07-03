@@ -198,16 +198,9 @@ function PlayState:calculateMatches()
         local tilesToFall = self.board:getFallingTiles()
 
         -- first, tween the falling tiles over 0.25s
+        -- checks if there is any new matchs with the new fallen tiles
         Timer.tween(0.25, tilesToFall):finish(function()
-            local newTiles = self.board:getNewTiles()
-            
-            -- then, tween new tiles that spawn from the ceiling over 0.25s to fill in
-            -- the new upper gaps that exist
-            Timer.tween(0.25, newTiles):finish(function()
-                -- recursively call function in case new matches have been created
-                -- as a result of falling blocks once new blocks have finished falling
-                self:calculateMatches()
-            end)
+            self:calculateMatches()
         end)
     -- if no matches, we can continue playing
     else
