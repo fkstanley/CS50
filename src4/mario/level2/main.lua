@@ -103,9 +103,9 @@ function love.load()
     -- amount by which we'll translate the scene to emulate a camera
     cameraScroll = 0
 
-    backgroundR = math.random(255)
-    backgroundG = math.random(255)
-    backgroundB = math.random(255)
+    backgroundR = math.random()
+    backgroundG = math.random()
+    backgroundB = math.random()
 
     tiles = generateLevel()
 
